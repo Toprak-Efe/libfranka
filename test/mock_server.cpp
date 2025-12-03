@@ -6,6 +6,7 @@
 
 #include <Poco/Net/DatagramSocket.h>
 #include <Poco/Net/ServerSocket.h>
+#include <Poco/Net/SocketAddress.h>
 #include <Poco/Net/StreamSocket.h>
 #include <gtest/gtest.h>
 
@@ -124,7 +125,8 @@ void MockServer<C>::serverThread() {
                            : typename C::Connect::Response(C::Connect::Status::kSuccess);
       });
 
-  Poco::Net::DatagramSocket udp_socket({kHostname, 0});
+  Poco::Net::SocketAddress addr(kHostname, 0);
+  Poco::Net::DatagramSocket udp_socket(addr, true);
   udp_socket.setBlocking(true);
   Socket udp_socket_wrapper;
   udp_socket_wrapper.sendBytes = [&](const void* data, size_t size) {
